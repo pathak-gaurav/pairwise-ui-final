@@ -1,0 +1,13 @@
+@import "../../../styles.scss";
+
+.version {
+  padding: 1rem 0;
+  .version-inner {
+    p {
+      margin-bottom: 0;
+      font-size: 18px;
+      color: #212529;
+      padding-top: 1rem;
+    }
+  }
+}

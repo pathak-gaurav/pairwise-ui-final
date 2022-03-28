@@ -1,0 +1,18 @@
+@import "../../../styles.scss";
+
+.about {
+  padding: 3rem 0;
+  .about-inner {
+    h2 {
+      margin-bottom: 0;
+      font-size: 35px;
+      font-weight: 700;
+    }
+    p {
+      margin-bottom: 0;
+      font-size: 18px;
+      color: #212529;
+      padding-top: 1rem;
+    }
+  }
+}

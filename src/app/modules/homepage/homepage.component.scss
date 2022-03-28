@@ -1,0 +1,48 @@
+@import "../../../styles.scss";
+
+.banner {
+  background-color: #198754;
+  padding: 5rem 0;
+  .image {
+    img {
+      width: 250px;
+      height: auto;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+  .title {
+    padding-top: 4rem;
+    h2 {
+      font-size: 35px;
+      color: white;
+    }
+    h6 {
+      font-size: 21px;
+      color: white;
+      padding-top: 1rem;
+    }
+  }
+}
+
+.home {
+  padding: 2rem 0;
+  .home-inner {
+    h2 {
+      font-size: 35px;
+      font-weight: 700;
+      padding-top: 3rem;
+    }
+    p {
+      margin-bottom: 0;
+      font-size: 17px;
+      color: #212529;
+      padding-top: 1rem;
+    }
+    li {
+      margin-bottom: 0;
+      font-size: 17px;
+      color: #212529;
+    }
+  }
+}

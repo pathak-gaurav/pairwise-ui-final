@@ -1,0 +1,30 @@
+.toast {
+    &.bottom-right {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+    }
+}
+.item {
+  border: 0px solid black;
+  margin-left: 25px;
+  margin-right: 0px;
+}
+
+td {
+  width: 110px;
+
+}
+
+#content {
+  width: 100%;
+  margin: 400px auto;
+  margin-top: 50px;
+  margin-bottom: 100px;
+}
+
+
+container-fluid.element.style {
+  margin-top: 50px;
+  margin-bottom: 100px;
+}
