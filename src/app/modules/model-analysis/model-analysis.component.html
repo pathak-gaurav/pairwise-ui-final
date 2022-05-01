@@ -1,147 +1,173 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-3">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="pb-3 border-bottom">Import your model</h5>
+<div class="collapse" id="navbarToggleExternalContent">
+  <div class="bg-light p-4">
+    <!--   EDIT FIELD START HERE-->
+    <div class="row">
+      <div class="col-md-3">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="pb-3 border-bottom">Import your model</h5>
 
-          <div class="form-group py-3 border-bottom">
-            <input class="form-control" type="file" (change)="selectFile($event)" accept=".csv"/>
-          </div>
+            <div class="form-group py-3 border-bottom">
+              <input class="form-control" type="file" (change)="selectFile($event)" accept=".csv"/>
+            </div>
 
-          <div class="py-3">
-            <div *ngIf="currentFile" class="progress">
-              <div
-                class="progress-bar progress-bar-striped progress-bar-animated"
-                role="progressbar"
-                attr.aria-valuenow="{{ progress }}"
-                aria-valuemin="0"
-                aria-valuemax="100"
-                [ngStyle]="{ width: progress + '%' }"
-              >
-                {{ progress }}%
+            <div class="py-3">
+              <div *ngIf="currentFile" class="progress">
+                <div
+                  class="progress-bar progress-bar-striped progress-bar-animated"
+                  role="progressbar"
+                  attr.aria-valuenow="{{ progress }}"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  [ngStyle]="{ width: progress + '%' }"
+                >
+                  {{ progress }}%
+                </div>
+              </div>
+
+              <div *ngIf="fileFlag">
+                <span class="justify-content-center my-3"> <i>{{message}}</i></span>
               </div>
             </div>
 
-            <div *ngIf="fileFlag">
-              <span class="justify-content-center my-3"> <i>{{message}}</i></span>
-            </div>
-          </div>
-
-          <p class="mb-1 pt-3">Do not know how to begin? Start from example data!</p>
-          <button class="btn btn-primary w-100 mb-2"
-                  (click)="downloadExample()">
-            Example Data Download
-          </button>
-
-          <div class="btns pt-3">
-            <button #divClick [hidden]=invisible class="btn btn-primary w-100 mb-2" (click)="handleUpdate()">Update
-              Tree
+            <p class="mb-1 pt-3">Do not know how to begin? Start from example data!</p>
+            <button class="btn btn-primary w-100 mb-2"
+                    (click)="downloadExample()">
+              Example Data Download
             </button>
-            <button (click)="reset()" class="btn btn-primary w-100">Reset</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-9">
-      <div class="card">
-        <div class="card-body">
-          <div class="row">
-            <div class="col-md-3">
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="pb-3 border-bottom">Add Node</h5>
 
-                  <div class="form-group pt-3">
-                    <div class="form-floating">
-                      <select class="form-select" [(ngModel)]='addNodeNameParent'>
-                        <option *ngFor="let node of nodes " [ngValue]="node.id">{{node.nodeName}}</option>
-                      </select>
-                      <label>Parent Name</label>
-                    </div>
-                    <div class="form-floating mt-3">
-                      <input type="text" (keyup.enter)="addNode()" class="form-control" placeholder="New Name"
-                             [(ngModel)]="nodeNameInput"/>
-                      <label class="text-danger">New Name*</label>
-                    </div>
-
-                    <button class="btn btn-primary mt-3 w-100" (click)="addNode()">Add</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="pb-3 border-bottom">Change Node</h5>
-
-                  <div class="form-group pt-3">
-                    <div class="form-floating">
-                      <select class="form-select" [(ngModel)]='renameParentNodeId'>
-                        <option *ngFor="let node of nodes " [ngValue]="node.id">{{node.nodeName}}</option>
-                      </select>
-                      <label>Name to change</label>
-                    </div>
-                    <div class="form-floating mt-3">
-                      <input type="text" (keyup.enter)="updateNode()" class="form-control" placeholder="New Name"
-                             [(ngModel)]="updateNameOfNode"/>
-                      <label class="text-danger">New Name*</label>
-                    </div>
-
-                    <button class="btn btn-info mt-3 w-100" (click)="updateNode()">Change</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="pb-3 border-bottom">Delete Node</h5>
-
-                  <div class="form-group pt-3">
-                    <div class="form-floating">
-                      <select class="form-select" (keyup.enter)="deleteNode()" [(ngModel)]='deleteNodeName'>
-                        <option *ngFor="let node of nodes " [ngValue]="node.id">{{node.nodeName}}</option>
-                      </select>
-                      <label>Name to delete</label>
-                    </div>
-                    <div class="mt-3">
-                      <p class="mb-0">Attention: The children of this node will be removed too!</p>
-                    </div>
-
-                    <button class="btn btn-danger mt-3 w-100" (click)="deleteNode()">Remove</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="pb-3 border-bottom">Analysis</h5>
-
-                  <div class="form-floating mt-3">
-                    <input type="number" min="0.15" max="1" class="form-control" [(ngModel)]="inconsistencyTolerance"
-                           placeholder="Inconsistency Tolerance" value="0.33"/>
-                    <label>Tolerance</label>
-                  </div>
-
-                  <div class="form-group pt-3">
-                    <div class="form-floating">
-                      <select class="form-select" (keyup.enter)="analyze()" [(ngModel)]="analyseNodeName">
-                        <option *ngFor="let node of nodes " [value]="node.id">{{node.nodeName}}</option>
-                      </select>
-                      <label>Parent node name</label>
-                    </div>
-                    <button [disabled]=isDisabled class="btn btn-info mt-3 w-100" (click)="analyze()">Analysis</button>
-                  </div>
-                </div>
-              </div>
+            <div class="btns pt-3">
+              <button #divClick [hidden]=invisible class="btn btn-primary w-100 mb-2" (click)="handleUpdate()">Update
+                Tree
+              </button>
+              <button #divCurveClick [hidden]=invisible class="btn btn-primary w-100 mb-2" (click)="handleCurve()">Update
+                Curve
+              </button>
+              <button (click)="reset()" class="btn btn-primary w-100">Reset</button>
             </div>
           </div>
         </div>
       </div>
+      <div class="col-md-9">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="pb-3 border-bottom">Add Node</h5>
+
+                    <div class="form-group pt-3">
+                      <div class="form-floating">
+                        <select class="form-select" [(ngModel)]='addNodeNameParent'>
+                          <option *ngFor="let node of nodes " [ngValue]="node.id">{{node.nodeName}}</option>
+                        </select>
+                        <label>Parent Name</label>
+                      </div>
+                      <div class="form-floating mt-3">
+                        <input type="text" (keyup.enter)="addNode()" class="form-control" placeholder="New Name"
+                               [(ngModel)]="nodeNameInput"/>
+                        <label class="text-danger">New Name*</label>
+                      </div>
+
+                      <button class="btn btn-primary mt-3 w-100" (click)="addNode()">Add</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="pb-3 border-bottom">Change Node</h5>
+
+                    <div class="form-group pt-3">
+                      <div class="form-floating">
+                        <select class="form-select" [(ngModel)]='renameParentNodeId'>
+                          <option *ngFor="let node of nodes " [ngValue]="node.id">{{node.nodeName}}</option>
+                        </select>
+                        <label>Name to change</label>
+                      </div>
+                      <div class="form-floating mt-3">
+                        <input type="text" (keyup.enter)="updateNode()" class="form-control" placeholder="New Name"
+                               [(ngModel)]="updateNameOfNode"/>
+                        <label class="text-danger">New Name*</label>
+                      </div>
+
+                      <button class="btn btn-info mt-3 w-100" (click)="updateNode()">Change</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="pb-3 border-bottom">Delete Node</h5>
+
+                    <div class="form-group pt-3">
+                      <div class="form-floating">
+                        <select class="form-select" (keyup.enter)="deleteNode()" [(ngModel)]='deleteNodeName'>
+                          <option *ngFor="let node of nodes " [ngValue]="node.id">{{node.nodeName}}</option>
+                        </select>
+                        <label>Name to delete</label>
+                      </div>
+                      <div class="mt-3">
+                        <p class="mb-0">Attention: The children of this node will be removed too!</p>
+                      </div>
+
+                      <button class="btn btn-danger mt-3 w-100" (click)="deleteNode()">Remove</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="pb-3 border-bottom">Analysis</h5>
+
+                    <div class="form-floating mt-3">
+                      <input type="number" min="0.15" max="1" class="form-control" [(ngModel)]="inconsistencyTolerance"
+                             placeholder="Inconsistency Tolerance" value="0.33"/>
+                      <label>Tolerance</label>
+                    </div>
+
+                    <div class="form-group pt-3">
+                      <div class="form-floating">
+                        <select class="form-select" (keyup.enter)="analyze()" [(ngModel)]="analyseNodeName">
+                          <option *ngFor="let node of nodes " [value]="node.id">{{node.nodeName}}</option>
+                        </select>
+                        <label>Parent node name</label>
+                      </div>
+                      <button [disabled]=isDisabled class="btn btn-info mt-3 w-100" (click)="analyze()">Analysis</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
+
+    <!--    EDIT FIELD END HERE-->
+
   </div>
+</div>
+<nav class="navbar navbar-light bg-light">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+      <a class="navbar-brand" >
+        <span style="text-align:right; padding-left: 5px">Help</span>
+      </a>
+    </button>
+
+  </div>
+</nav>
+
+
+<div class="container-fluid">
+
   <highcharts-chart
     [Highcharts]="Highcharts"
     [options]="chartOptions"
@@ -240,7 +266,8 @@
         </div>
         <button class="btn btn-info mt-3" (click)="reduceInconsistency()">Reduce Inconsistency</button>
         <div *ngIf="reducedInconsistencyFlag">
-          <button class="btn btn-info mt-3" (click)="exportResult()">Download Result</button>
+          <button class="btn btn-info mt-3" (click)="exportResult()" style='margin-right:6px'>Download Result</button>
+          <button class="btn btn-info mt-3" (click)="exportTreeResult()">Download Tree Result</button>
         </div>
       </div>
     </div>

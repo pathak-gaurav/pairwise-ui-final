@@ -25,9 +25,10 @@ export class PairwiseService {
   private analyzeUrl = 'http://localhost:8081/v1/analyze';
   private resetUrl = 'http://localhost:8081/v1/reset';
 
-  private downloadTreeURL = 'http://localhost:8081/download-tree';
+  private downloadTreeURL = 'http://localhost:8080/result';
 
 //http://localhost:8081
+  //https://pairwise-backend.herokuapp.com
   constructor(
     private httpClient: HttpClient
   ) {

@@ -2,9 +2,13 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
+  // {
+  //   path: '',
+  //   loadChildren: () => import('./modules/homepage/homepage.module').then(m => m.HomepageModule)
+  // },
   {
     path: '',
-    loadChildren: () => import('./modules/homepage/homepage.module').then(m => m.HomepageModule)
+    loadChildren: () => import('./modules/model-analysis/model-analysis.module').then(m => m.ModelAnalysisModule)
   },
   {
     path: 'homepage',

@@ -12,6 +12,8 @@ import Histogram from 'highcharts/modules/histogram-bellcurve';
 
 declare var require: any;
 require('highcharts/highcharts-more')(Highcharts);
+require('highcharts/modules/exporting')(Highcharts);
+require('highcharts/modules/sunburst')(Highcharts);
 Treemap(Highcharts)
 Histogram(Highcharts)
 
@@ -20,8 +22,9 @@ Histogram(Highcharts)
   templateUrl: './model-analysis.component.html',
   styleUrls: ['./model-analysis.component.scss']
 })
-export class ModelAnalysisComponent implements OnInit, AfterViewInit{
+export class ModelAnalysisComponent implements OnInit, AfterViewInit {
   @ViewChild('divClick') divClick: ElementRef;
+  @ViewChild('divCurveClick') divCurveClick: ElementRef;
 
   nodes: Node[] = [];
   nodeNameInput: string = '';
@@ -108,34 +111,70 @@ export class ModelAnalysisComponent implements OnInit, AfterViewInit{
   chartOptions: Highcharts.Options = {
     series: [{
       type: "treemap",
-      layoutAlgorithm: 'squarified',
+      layoutAlgorithm: 'sliceAndDice', //'sliceAndDice',
       alternateStartingDirection: true,
+      allowTraversingTree:true,
+      animationLimit: 1000,
       data: this.datatable,
+      levelIsConstant: false,
       levels: [{
+        layoutAlgorithm: 'sliceAndDice',
         level: 1,
-        color: '#546cce',
+        borderWidth: 3,
+        borderColor: '#130f0f',
+        color: '#f8f9fc ',
         dataLabels: {
           color: '#130f0f',
           enabled: true,
           align: 'center',
-          verticalAlign: 'middle',
-          format: '</b> Node: {point.name}, Value: {point.value}, Parent: {point.parent}',
+          verticalAlign: 'top',
+          format: 'Node: {point.name}, Value: {point.value}, Parent: {point.parent}<br/> ',
           style: {
             // fontSize: '15px',
             fontFamily: 'sans-serif',
             fontWeight: 'sans-serif'
           }
         }
-      }]
+      },{
+        layoutAlgorithm: 'squarified',
+        level: 2,
+        borderWidth: 1,
+        borderColor: '#130f0f',
+        color: '#f8f9fc',
+        dataLabels: {
+          color: '#130f0f',
+          enabled: true,
+          align: 'center',
+          verticalAlign: 'middle',
+          format: 'Node: {point.name}, Value: {point.value}, Parent: {point.parent} <br/>',
+          style: {
+            // fontSize: '15px',
+            fontFamily: 'sans-serif',
+            fontWeight: 'sans-serif'
+          }
+        }
+      }
+      ]
     }],
     colorAxis: {
       minColor: '#7a2e69',
       maxColor: '#E11919FF'
     },
     title: {
-      text: 'Pairwise Nodes'
+      text: 'Pairwise Comparisons Model'
+    }, exporting: {
+      enabled: true,
+
     },
-    credits: {
+    plotOptions: {
+      series: {
+        events: {
+          click: function (event) {
+
+          }
+        }
+      }
+    }, credits: {
       enabled: false,
     },
     tooltip: {
@@ -242,12 +281,15 @@ export class ModelAnalysisComponent implements OnInit, AfterViewInit{
     let temp: any[] = [];
     this.pairwiseService.getTreeNode().subscribe((res) => {
       res.forEach(el => {
+        // if(el.parentName!==null){
         temp.push({
           name: el.nodeName,
+          id: el.nodeName,
           parent: el.parentName,
           value: el.value,
           colorValue: Math.floor(Math.random() * 100) + 1
         });
+        // }
       });
     });
     this.datatable = temp
@@ -256,14 +298,37 @@ export class ModelAnalysisComponent implements OnInit, AfterViewInit{
 
   handleUpdate() {
     this.chartOptions.title = {
-      text: 'Pairwise Nodes',
+      text: 'Pairwise Comparisons Model',
     };
     this.chartOptions.series = [{
       type: 'treemap',
-      layoutAlgorithm: 'squarified',
-      alternateStartingDirection: true,
       data: this.datatable,
     }];
+    this.pieChartOptions.series = [{
+      type: 'pie',
+      data: this.pieChartDatatable,
+    }];
+    this.bellCurveChartOptions.series = [{
+      name: 'Histogram',
+      type: 'bellcurve',
+      xAxis: 1,
+      yAxis: 1,
+      baseSeries: 's1',
+      zIndex: -1
+    }, {
+      name: 'Data',
+      type: 'scatter',
+      data: this.bellCurveDatatable,
+      visible: false,
+      id: 's1',
+      marker: {
+        radius: 1.5
+      }
+    }];
+    this.updateFlag = true;
+  }
+
+  handleCurve() {
     this.pieChartOptions.series = [{
       type: 'pie',
       data: this.pieChartDatatable,
@@ -300,8 +365,10 @@ export class ModelAnalysisComponent implements OnInit, AfterViewInit{
     });
 
     this.nodeNameInput = '';
-    this.getAllNodes();
     this.reload();
+    setTimeout(() => {
+      this.divClick.nativeElement.click();
+    }, 300);
   }
 
   deleteNode(): void {
@@ -316,6 +383,9 @@ export class ModelAnalysisComponent implements OnInit, AfterViewInit{
 
     this.getAllNodes();
     this.reload();
+    setTimeout(() => {
+      this.divClick.nativeElement.click();
+    }, 300);
   }
 
   updateNode(): void {
@@ -331,6 +401,9 @@ export class ModelAnalysisComponent implements OnInit, AfterViewInit{
 
     this.updateNameOfNode = '';
     this.reload();
+    setTimeout(() => {
+      this.divClick.nativeElement.click();
+    }, 300);
   }
 
   selectFile(event: any) {
@@ -396,6 +469,14 @@ export class ModelAnalysisComponent implements OnInit, AfterViewInit{
           this.toast.show('ERROR', this.message);
         }
       });
+
+    setTimeout(() => {
+      this.message = '';
+      this.fileFlag = false;
+      this.progress = 0;
+      this.currentFile = undefined;
+    }, 8000);
+
   }
 
   closeToast() {
@@ -416,7 +497,14 @@ export class ModelAnalysisComponent implements OnInit, AfterViewInit{
     }, 200);
   }
 
+  curve() {
+    setTimeout(() => {
+      this.divCurveClick.nativeElement.click();
+    }, 200);
+  }
+
   analyze() {
+    console.log("Analyze ===>", this.analyseNodeName);
     this.pairwiseService.analyze(this.analyseNodeName, this.inconsistencyTolerance).subscribe((data) => {
       this.data = data;
       this.showTableOnAnalyze = true;
@@ -426,7 +514,7 @@ export class ModelAnalysisComponent implements OnInit, AfterViewInit{
     }, (error) => {
       this.toast.show('Error', error.error);
     })
-    this.reload();
+    //this.reload();
   }
 
   changeValue(item: any, id: number, j: number, event: any, numberPassed: number): void {
@@ -465,7 +553,9 @@ export class ModelAnalysisComponent implements OnInit, AfterViewInit{
     })
     this.bellCurveDatatable = tempBellCurve;
     this.pieChartDatatable = tempPieChart;
-    this.reload();
+    setTimeout(() => {
+    }, 200);
+    this.curve();
   }
 
   reduceInconsistency() {
@@ -527,20 +617,52 @@ export class ModelAnalysisComponent implements OnInit, AfterViewInit{
     })
   }
 
-  reset(){
+  reset() {
     this.pairwiseService.reset().subscribe();
     this.showTableOnAnalyze = false;
     this.reducedInconsistencyFlag = false;
     this.showTableOnMaxInconsistency = false;
     this.showTriadTable = false;
-    this.getAllNodes();
+    // this.getAllNodes();
     this.reload();
-    window.location.reload();
+    setTimeout(() => {
+      window.location.reload();
+    }, 150);
   }
 
   exportResult() {
     const fileName = 'result-download.csv';
     return this.pairwiseService.exportResult().subscribe(x => {
+      var newBlob = new Blob([x], {type: "application/csv"});
+      // this.file = res;
+
+      if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+        window.navigator.msSaveOrOpenBlob(newBlob, fileName);
+        return;
+      }
+
+      // For other browsers:
+      // Create a link pointing to the ObjectURL containing the blob.
+      const file_data = window.URL.createObjectURL(newBlob);
+
+      var link = document.createElement('a');
+      link.href = file_data;
+      link.download = fileName;
+      // this is necessary as link.click() does not work on the latest firefox
+      link.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));
+
+      setTimeout(function () {
+        // For Firefox it is necessary to delay revoking the ObjectURL
+        window.URL.revokeObjectURL(file_data);
+        link.remove();
+      }, 100);
+    })
+  }
+
+
+  exportTreeResult() {
+    const fileName = 'treemap.csv';
+    return this.pairwiseService.downloadTree().subscribe(x => {
       var newBlob = new Blob([x], {type: "application/csv"});
       // this.file = res;
 
