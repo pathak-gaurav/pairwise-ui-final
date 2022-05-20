@@ -109,80 +109,141 @@ export class ModelAnalysisComponent implements OnInit, AfterViewInit {
   datatable: any = [{name: 'Root', parent: null, value: 100, colorValue: 1}];
   Highcharts: typeof Highcharts = Highcharts; // required
   chartOptions: Highcharts.Options = {
-    series: [{
-      type: "treemap",
-      layoutAlgorithm: 'sliceAndDice', //'sliceAndDice',
-      alternateStartingDirection: true,
-      allowTraversingTree:true,
-      animationLimit: 1000,
-      data: this.datatable,
-      levelIsConstant: false,
-      levels: [{
-        layoutAlgorithm: 'sliceAndDice',
-        level: 1,
-        borderWidth: 3,
-        borderColor: '#130f0f',
-        color: '#f8f9fc ',
-        dataLabels: {
-          color: '#130f0f',
-          enabled: true,
-          align: 'center',
-          verticalAlign: 'top',
-          format: 'Node: {point.name}, Value: {point.value}, Parent: {point.parent}<br/> ',
-          style: {
-            // fontSize: '15px',
-            fontFamily: 'sans-serif',
-            fontWeight: 'sans-serif'
-          }
-        }
-      },{
-        layoutAlgorithm: 'squarified',
-        level: 2,
-        borderWidth: 1,
-        borderColor: '#130f0f',
-        color: '#f8f9fc',
-        dataLabels: {
-          color: '#130f0f',
-          enabled: true,
-          align: 'center',
-          verticalAlign: 'middle',
-          format: 'Node: {point.name}, Value: {point.value}, Parent: {point.parent} <br/>',
-          style: {
-            // fontSize: '15px',
-            fontFamily: 'sans-serif',
-            fontWeight: 'sans-serif'
-          }
-        }
-      }
-      ]
-    }],
+    chart: {
+      height: '25%',
+      // width: '30%',
+    },
+    series: [
+      {
+        type: 'treemap',
+        layoutAlgorithm: 'sliceAndDice', //'sliceAndDice',
+        alternateStartingDirection: true,
+        allowTraversingTree: true,
+        animationLimit: 1000,
+        data: this.datatable,
+        levelIsConstant: false,
+        levels: [
+          {
+            layoutAlgorithm: 'sliceAndDice',
+            level: 1,
+            borderWidth: 3,
+            borderColor: '#130f0f',
+            color: '#f8f9fc',
+            dataLabels: {
+              color: '#130f0f',
+              enabled: true,
+              align: 'center',
+              verticalAlign: 'top',
+              format:
+                'Node: {point.name}, Value: {point.value}, Parent: {point.parent}<br/> ',
+              style: {
+                fontSize: '15px',
+                fontFamily: 'sans-serif',
+                fontWeight: 'sans-serif',
+              },
+            },
+          },
+          {
+            borderWidth: 1,
+            borderColor: 'black',
+            level: 3,
+          },
+          {
+            borderWidth: 1,
+            borderColor: 'black',
+            level: 4,
+          },
+          {
+            borderWidth: 1,
+            borderColor: 'black',
+            level: 5,
+          },
+          {
+            borderWidth: 1,
+            borderColor: 'black',
+            level: 6,
+          },
+          {
+            borderWidth: 1,
+            borderColor: 'black',
+            level: 7,
+          },
+          {
+            borderWidth: 1,
+            borderColor: 'black',
+            level: 8,
+          },
+          {
+            borderWidth: 1,
+            borderColor: 'black',
+            level: 9,
+          },
+          {
+            borderWidth: 1,
+            borderColor: 'black',
+            level: 10,
+          },
+          {
+            borderWidth: 1,
+            borderColor: 'black',
+            level: 11,
+          },
+          {
+            borderWidth: 1,
+            borderColor: 'black',
+            level: 12,
+          },
+          {
+            layoutAlgorithm: 'squarified',
+            level: 2,
+            borderWidth: 1,
+            borderColor: '#130f0f',
+            color: '#f8f9fc',
+            dataLabels: {
+              color: '#130f0f',
+              enabled: true,
+              align: 'center',
+              verticalAlign: 'middle',
+              format:
+                'Node: {point.name}, Value: {point.value}, Parent: {point.parent} <br/>',
+              style: {
+                // fontSize: '15px',
+                fontFamily: 'sans-serif',
+                fontWeight: 'sans-serif',
+              },
+            },
+          },
+        ],
+      },
+    ],
     colorAxis: {
       minColor: '#7a2e69',
-      maxColor: '#E11919FF'
+      maxColor: '#E11919FF',
     },
     title: {
-      text: 'Pairwise Comparisons Model'
-    }, exporting: {
+      text: 'Pairwise Comparisons Model',
+    },
+    exporting: {
       enabled: true,
-
     },
     plotOptions: {
       series: {
         events: {
-          click: function (event) {
-
-          }
-        }
-      }
-    }, credits: {
+          click: function (event) {},
+        },
+      },
+    },
+    credits: {
       enabled: false,
     },
     tooltip: {
       useHTML: true,
       followPointer: true,
-      pointFormat: '<span>Node: {point.name}, Value: {point.value}, Parent: {point.parent} </span>',
-    }
-  } // required
+      pointFormat:
+        '<span>Node: {point.name}, Value: {point.value}, Parent: {point.parent} </span>',
+    },
+  };
+ // required
   updateFlag: boolean = false; // optional boolean
   invisible: boolean = true;
 
